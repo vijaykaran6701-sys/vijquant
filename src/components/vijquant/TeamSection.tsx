@@ -14,9 +14,7 @@ const TeamSection: React.FC = () => {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setIsVisible(true);
-      },
+      ([entry]) => entry.isIntersecting && setIsVisible(true),
       { threshold: 0.2 }
     );
 
@@ -28,81 +26,122 @@ const TeamSection: React.FC = () => {
     {
       id: 'tm1',
       name: 'Vijay Karanh',
-      role: 'Co-Founder',
-      bio: 'Drives company vision, strategy, and growth. Oversees technology direction and innovation; focused on building scalable and future-ready solutions.',
+      role: 'Co-Founder | CEO',
+      bio: 'Leads company vision, strategy, and growth.',
       avatar: '/vijquant-images/team/vijay_karan.png',
     },
     {
       id: 'tm2',
-      name: 'Amrita',
-      role: 'Manager',
-      bio: 'Manages operations and team coordination. Ensures smooth project execution and client communication; maintains quality standards and delivery timelines.',
-      avatar: '/vijquant-images/team/amrita.png',
-    },
-    {
-      id: 'tm3',
       name: 'Sumit Paswan',
-      role: 'Backend Developer',
-      bio: 'Develops server-side logic and database systems. Handles APIs, authentication, and performance optimization; ensures secure and scalable backend architecture.',
+      role: 'CTO | Backend Developer',
+      bio: 'Leads technology and backend architecture.',
       avatar: '/vijquant-images/team/sumit.png',
     },
     {
+      id: 'tm3',
+      name: 'Gaurav Savita',
+      role: 'CMO | Head of Marketing',
+      bio: 'Drives branding, marketing, and growth.',
+      avatar: '/vijquant-images/team/gaurav.jpg',
+    },
+    {
       id: 'tm4',
-      name: 'Gaurav Pal',
-      role: 'Frontend Developer',
-      bio: 'Builds responsive and interactive user interfaces. Works with modern HTML, CSS, and JavaScript frameworks; focused on performance and smooth user experience.',
-      avatar: '/vijquant-images/team/gaurav.png',
+      name: 'Amrita',
+      role: 'Operations Manager',
+      bio: 'Manages operations and delivery.',
+      avatar: '/vijquant-images/team/amrita.png',
     },
     {
       id: 'tm5',
-      name: 'Vishal Singh',
-      role: 'Cyber Security Specialist',
-      bio: 'Ensures application and data security. Manages vulnerability testing and risk analysis; implements security best practices and protection layers.',
-      avatar: '/vijquant-images/team/vishal_singh.png',
+      name: 'Gaurav Pal',
+      role: 'Frontend Developer',
+      bio: 'Builds fast and interactive UI.',
+      avatar: '/vijquant-images/team/gaurav.png',
     },
     {
       id: 'tm6',
-      name: 'Sanjana',
-      role: 'Web Designer',
-      bio: 'Designs visually appealing website layouts. Creates modern, clean, and responsive designs; focuses on branding and visual consistency.',
-      avatar: '/vijquant-images/team/sanjana.png',
+      name: 'Vishal Singh',
+      role: 'Cyber Security Specialist',
+      bio: 'Ensures system and data security.',
+      avatar: '/vijquant-images/team/vishal_singh.png',
     },
     {
       id: 'tm7',
+      name: 'Sanjana',
+      role: 'Web Designer',
+      bio: 'Creates modern visual designs.',
+      avatar: '/vijquant-images/team/sanjana.png',
+    },
+    {
+      id: 'tm8',
       name: 'Rashmi',
       role: 'UI/UX Designer',
-      bio: 'Designs user-centric interfaces and workflows. Improves usability, accessibility, and user engagement; converts ideas into intuitive digital experiences.',
+      bio: 'Designs intuitive user experiences.',
       avatar: '/vijquant-images/team/rashmi.png',
     },
   ];
 
   return (
-    <section id="team" ref={sectionRef} className="relative py-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`text-center mb-12 transform transition-all duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}>
-          <span className="text-sm font-semibold text-cyan-400 uppercase tracking-widest">Our Team</span>
-          <h3 className="text-3xl sm:text-4xl font-bold mt-3">People Behind the Product</h3>
-          <p className="text-gray-400 mt-3 max-w-2xl mx-auto">A small cross-disciplinary team focused on building delightful digital products.</p>
+    <section id="team" ref={sectionRef} className="relative py-24">
+      <div className="max-w-7xl mx-auto px-6">
+        <div
+          className={`text-center mb-14 transition-all duration-700 ${
+            isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
+          }`}
+        >
+          <span className="text-sm font-semibold text-cyan-400 uppercase tracking-widest">
+            Our Team
+          </span>
+          <h3 className="text-3xl sm:text-4xl font-bold mt-3">
+            People Behind the Product
+          </h3>
         </div>
 
-        <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 transform transition-all duration-700 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-6 opacity-0'}`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
           {team.map((member) => (
-            <div key={member.id} className="bg-white/3 rounded-2xl p-6 flex flex-col items-center text-center">
-              <div className="w-24 h-24 mb-4 rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
-                {member.avatar ? (
-                  <img
-                    src={member.avatar}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                    style={{ width: '100%', height: '100%' }}
-                  />
-                ) : (
-                  <div className="text-xl font-semibold text-gray-300">{member.name.charAt(0)}</div>
-                )}
+            <div
+              key={member.id}
+              className="group [perspective:1200px]"
+            >
+              <div
+                className="
+                  relative bg-white/5 rounded-2xl p-6 text-center
+                  transition-all duration-500 ease-out
+                  transform-gpu
+                  group-hover:-translate-y-3
+                  group-hover:rotate-x-[8deg]
+                  group-hover:rotate-y-[8deg]
+                  group-hover:scale-[1.05]
+                  group-hover:shadow-[0_30px_60px_-15px_rgba(34,211,238,0.35)]
+                "
+              >
+                {/* Glow */}
+                <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition duration-500 bg-gradient-to-br from-cyan-400/20 to-transparent blur-xl" />
+
+                <div className="relative z-10 flex flex-col items-center">
+                  <div className="w-24 h-24 mb-4 rounded-xl overflow-hidden bg-white/10">
+                    {member.avatar ? (
+                      <img
+                        src={member.avatar}
+                        alt={member.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="text-2xl font-bold">
+                        {member.name.charAt(0)}
+                      </span>
+                    )}
+                  </div>
+
+                  <h4 className="text-lg font-semibold">{member.name}</h4>
+                  <p className="text-sm text-cyan-300 font-medium">
+                    {member.role}
+                  </p>
+                  <p className="mt-3 text-sm text-gray-400">
+                    {member.bio}
+                  </p>
+                </div>
               </div>
-              <h4 className="text-lg font-semibold">{member.name}</h4>
-              <p className="text-sm text-cyan-300 font-medium">{member.role}</p>
-              <p className="mt-3 text-sm text-gray-400">{member.bio}</p>
             </div>
           ))}
         </div>
