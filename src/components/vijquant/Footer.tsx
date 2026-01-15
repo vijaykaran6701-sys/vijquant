@@ -46,7 +46,7 @@ const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-6">
               <div className="relative">
-                <img src="vijquant-logo.png" alt="Vijquant logo" className="w-28 h-10 object-contain" />
+                <img src="/vijquant-logo.png" alt="Vijquant logo" className="w-28 h-10 object-contain" />
               </div>
               <div>
                 <span className="text-2xl font-bold text-white">Vijquant</span>
