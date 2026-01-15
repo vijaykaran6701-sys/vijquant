@@ -46,7 +46,7 @@ const TeamSection: React.FC = () => {
     },
     {
       id: 'tm4',
-      name: 'Amrita',
+      name: 'Amrita Singh',
       role: 'Operations Manager',
       bio: 'Manages operations and delivery.',
       avatar: '/vijquant-images/team/amrita.png',
@@ -67,14 +67,14 @@ const TeamSection: React.FC = () => {
     },
     {
       id: 'tm7',
-      name: 'Sanjana',
+      name: 'Sanjana Kashyap',
       role: 'Web Designer',
       bio: 'Creates modern visual designs.',
       avatar: '/vijquant-images/team/sanjana.png',
     },
     {
       id: 'tm8',
-      name: 'Rashmi',
+      name: 'Rashmi Gautam',
       role: 'UI/UX Designer',
       bio: 'Designs intuitive user experiences.',
       avatar: '/vijquant-images/team/rashmi.png',
@@ -151,3 +151,4 @@ const TeamSection: React.FC = () => {
 };
 
 export default TeamSection;
+
