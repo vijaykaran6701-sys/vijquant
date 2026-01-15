@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Amavij — Professional</title>
+  <style>
+    :root{
+      --bg-1: #f3f6ff;      /* pale blue */
+      --bg-2: #eef9f7;      /* pale teal */
+      --panel: #ffffff;
+      --muted: #6b7280;
+      --accent: #0f766e;    /* teal */
+      --accent-2: #0369a1;  /* blue */
+      --danger: #ef4444;
+      --shadow: 0 12px 40px rgba(2,6,23,0.08);
+      --radius: 12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:#05203a}
+    .wrap{max-width:1180px;margin:22px auto;padding:18px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,#fff,#f3f8ff);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);overflow:hidden}
+    .logo img{width:52px;height:52px;border-radius:50%;object-fit:cover}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .controls-row{display:flex;gap:10px;align-items:center}
+    .btn{background:#fff;border-radius:10px;padding:8px 12px;border:1px solid rgba(2,6,23,0.06);cursor:pointer;box-shadow:0 6px 18px rgba(2,6,23,0.04)}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;border:0}
+
+    main{display:grid;grid-template-columns:1fr;gap:16px}
+    .card{background:var(--panel);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+
+    /* Inventory table area */
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+    select,input[type=text]{padding:9px;border-radius:10px;border:1px solid #e9f0ff;background:#fbfdff}
+    input.qty{width:84px;padding:8px;border-radius:8px;border:1px solid #eef3ff}
+    .table-wrap{overflow:auto;border-radius:10px;max-height:420px}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:10px;text-align:left;border-bottom:1px solid #f3f6fb}
+    th{color:var(--muted);font-weight:600}
+
+    .overview-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+    .overview-card{padding:12px;border-radius:10px;background:linear-gradient(180deg,#fff,#fbfdff);box-shadow:0 8px 24px rgba(2,6,23,0.04)}
+
+    /* DOWNSIDE area (big footer-like section containing the four items) */
+    .downside{margin-top:18px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+    .down-card{background:linear-gradient(180deg,#ffffff,#f7fcfc);border-radius:12px;padding:14px;box-shadow:var(--shadow);min-height:180px;display:flex;flex-direction:column;gap:8px}
+    .down-card h3{margin:0;font-size:15px}
+    .down-card p{margin:0;color:var(--muted);font-size:13px}
+    .down-card .image{width:100%;height:80px;border-radius:8px;object-fit:cover;margin-top:8px}
+
+    /* responsive */
+    @media (max-width:1100px){
+      .downside{grid-template-columns:repeat(2,1fr)}
+      .overview-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media (max-width:680px){
+      .downside{grid-template-columns:1fr}
+      .overview-grid{grid-template-columns:1fr}
+      header{flex-direction:column;align-items:flex-start;gap:10px}
+    }
+
+   /* ===== FOOTER STYLING ===== */
+.pro-footer{
+  background: linear-gradient(180deg,#ffffff,#f3f6ff);
+  padding: 28px 14px;
+  margin-top: 30px;
+  border-radius: 14px;
+  box-shadow: 0 14px 40px rgba(2,6,23,0.08);
+}
+
+.footer-container{
+  max-width: 1180px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Logo + name */
+.footer-brand{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-logo{
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(2,6,23,0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-logo img{
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.footer-title{
+  margin: 0;
+  font-size: 18px;
+  color: #0f172a;
+  font-weight: 600;
+}
+
+.footer-subtitle{
+  margin: 2px 0 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Menu links */
+.footer-menu{
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-menu a{
+  color: #0f172a;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.footer-menu a:hover{
+  color: #0369a1;
+  text-decoration: underline;
+}
+
+/* Right side copyright */
+.footer-copy{
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* Responsive */
+@media(max-width:780px){
+  .footer-container{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo">
+          <img src="../images/inventry.png" alt="logo">
+        </div>
+        <div>
+          <h1>Amavij Dashboard</h1>
+          <p class="lead">Professional — inventory & vendor reporting</p>
+        </div>
+      </div>
+
+      <div class="controls-row">
+        <button id="addBtn" class="btn">Add Item</button>
+        <label class="btn" style="cursor:pointer">Import CSV <input id="csv" type="file" accept=".csv" style="display:none"></label>
+        <button id="exportAll" class="btn">Export All</button>
+        <button id="exportFiltered" class="btn">Export Filtered</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Inventory card -->
+      <section class="card">
+        <div class="controls">
+          <select id="vendorFilter"><option>All Vendors</option></select>
+          <input id="q" type="text" placeholder="Search name, category, vendor">
+          <button id="clear" class="btn">Clear</button>
+          <div style="margin-left:auto;color:var(--muted)">Total items: <strong id="count">0</strong></div>
+        </div>
+
+        <div class="table-wrap card" style="padding:0">
+          <table id="table">
+            <thead>
+              <tr><th>Name</th><th>Vendor</th><th>Category</th><th>Qty</th><th>Price</th><th>Value</th><th>Date</th><th>Actions</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div class="overview-grid">
+          <div class="overview-card">
+            <strong>Overview</strong>
+            <p style="margin-top:8px;color:var(--muted)">SKUs: <span id="ov-skus">0</span></p>
+            <p style="margin-top:6px;color:var(--muted)">Vendors: <span id="ov-vendors">0</span></p>
+            <img src="https://images.unsplash.com/photo-1555685812-4b943f1fb86a?q=80&w=1200&auto=format&fit=crop" class="image" alt="overview image">
+          </div>
+          <div class="overview-card">
+            <strong>Recent Activity</strong>
+            <p style="margin-top:8px;color:var(--muted)">Latest SKU: <span id="ov-latest">—</span></p>
+            <p style="margin-top:6px;color:var(--muted)">Imports & edits appear here</p>
+            <img src="https://images.unsplash.com/photo-1581093588401-0a3d0cf3f524?q=80&w=1200&auto=format&fit=crop" class="image" alt="activity">
+          </div>
+          <div class="overview-card">
+            <strong>Total Value</strong>
+            <p style="margin-top:8px;color:var(--muted)">Value: <span id="ov-value">₹0</span></p>
+            <p style="margin-top:6px;color:var(--muted)">qty × price</p>
+            <img src="https://images.unsplash.com/photo-1590608897129-79b44b9e3b9d?q=80&w=1200&auto=format&fit=crop" class="image" alt="value">
+          </div>
+        </div>
+      </section>
+
+      <!-- DOWNSIDE: Vendor Value Report, Low Stock Alerts, Habit Detail, Tips -->
+      <section class="downside">
+        <!-- Vendor Value Report (downside) -->
+        <div class="down-card" id="vendorReportCard">
+          <h3>Vendor Value Report</h3>
+          <p class="small">Total inventory value by vendor (summary)</p>
+          <canvas id="vendorChart" style="width:100%;height:90px;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfdff);margin-top:8px"></canvas>
+          <div style="margin-top:auto;display:flex;gap:8px;align-items:center">
+            <button id="dlReport" class="btn">Download CSV</button>
+            <button id="copyReport" class="btn">Copy Summary</button>
+          </div>
+        </div>
+
+        <!-- Low Stock Alerts (downside) -->
+        <div class="down-card" id="lowStockCard">
+          <h3>Low Stock Alerts</h3>
+          <p class="small">Items with qty ≤ <strong id="thresh">10</strong></p>
+          <ul id="lowList" style="margin:8px 0 0 14px;color:var(--muted)"></ul>
+          <div style="margin-top:auto;color:var(--muted);font-size:13px">Keep these SKUs prioritized for reorder.</div>
+        </div>
+
+        <!-- Habit Detail (downside) -->
+        <div class="down-card" id="habitCard">
+          <h3>Habit Detail</h3>
+          <p class="small">Track supplier follow-ups & restock cadence</p>
+          <div style="margin-top:8px;color:var(--muted);font-size:13px">
+            <p><strong>Last follow-up:</strong> <span id="lastFollow">3 days ago</span></p>
+            <p><strong>Recommended cadence:</strong> Weekly</p>
+            <p><strong>Next action:</strong> Contact Timber Co. for cushion restock</p>
+          </div>
+          <img src="https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?q=80&w=1200&auto=format&fit=crop" class="image" alt="habit">
+        </div>
+
+        <!-- Tips (downside) -->
+        <div class="down-card" id="tipsCard">
+          <h3>Tips</h3>
+          <p class="small" style="color:var(--muted);margin-top:6px">Quick operational suggestions</p>
+          <ul style="margin:10px 0 0 18px;color:var(--muted);font-size:13px">
+            <li>Set reorder points for low-stock SKUs.</li>
+            <li>Use CSV import for bulk updates & audits.</li>
+            <li>Export vendor reports monthly for accounting.</li>
+            <li>Prioritize high-value items for weekly checks.</li>
+          </ul>
+          <img src="https://images.unsplash.com/photo-1526401485004-0569b3b6d1c6?q=80&w=1200&auto=format&fit=crop" class="image" alt="tips">
+        </div>
+      </section>
+    </main>
+<!-- ================= FOOTER SECTION ================= -->
+<footer class="pro-footer">
+  <div class="footer-container">
+
+    <!-- Left: Logo + Name -->
+    <div class="footer-brand">
+      <div class="footer-logo">
+        <img src="../images/inventry.png" alt="logo">
+      </div>
+      <div>
+        <h3 class="footer-title">Amavij Dashboard</h3>
+        <p class="footer-subtitle">Smart Inventory • Vendor Management • Reports</p>
+      </div>
+    </div>
+
+    <!-- Center: Menu Links -->
+    <nav class="footer-menu">
+      <a href="#">Home</a>
+      <a href="#">Inventory</a>
+      <a href="#">Vendors</a>
+      <a href="#">Reports</a>
+      <a href="#">Analytics</a>
+      <a href="#">Settings</a>
+      <a href="#">Help</a>
+    </nav>
+
+    <!-- Right: Copyright -->
+    <div class="footer-copy">
+      © <span id="year"></span> Amavij Dashboard. All rights reserved.
+    </div>
+
+  </div>
+© <span id="year"></span> Amavij Dashboard • Built professionally
+</footer>
+
+  </div>
+
+  <script>
+    // ---------- sample data ----------
+    let items = [
+      { id:1, name:"Wooden Chair", vendor:"Timber Co.", category:"Furniture", quantity:25, price:45, date:"2025-11-01" },
+      { id:2, name:"Metal Screwpack", vendor:"Fixit Supplies", category:"Hardware", quantity:120, price:5, date:"2025-10-28" },
+      { id:3, name:"Cushion Set", vendor:"Timber Co.", category:"Textiles", quantity:8, price:12, date:"2025-09-15" },
+      { id:4, name:"Adhesive Glue", vendor:"GlueMasters", category:"Adhesives", quantity:6, price:3, date:"2025-11-10" }
+    ];
+    const LOW_THRESHOLD = 10;
+
+    // ---------- DOM refs ----------
+    const tbody = document.querySelector('#table tbody');
+    const vendorFilter = document.getElementById('vendorFilter');
+    const q = document.getElementById('q');
+    const countEl = document.getElementById('count');
+    const ovSkus = document.getElementById('ov-skus');
+    const ovVendors = document.getElementById('ov-vendors');
+    const ovLatest = document.getElementById('ov-latest');
+    const ovValue = document.getElementById('ov-value');
+    const lowList = document.getElementById('lowList');
+    const vendorChart = document.getElementById('vendorChart');
+    const yearEl = document.getElementById('year');
+    yearEl.textContent = new Date().getFullYear();
+
+    // ---------- helpers ----------
+    function uniqueVendors(){ return Array.from(new Set(items.map(i=>i.vendor).filter(Boolean))).sort(); }
+    function escape(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+    function filtered(){ const qq = q.value.trim().toLowerCase(); const vf = vendorFilter.value; return items.filter(it=>{
+      const okVendor = vf==='All Vendors' || it.vendor===vf;
+      const hay = [it.name,it.category,it.vendor].join(' ').toLowerCase();
+      return okVendor && (!qq || hay.includes(qq));
+    });}
+
+    // ---------- render table ----------
+    function renderTable(){
+      const rows = filtered();
+      tbody.innerHTML = rows.map(it=>`
+        <tr data-id="${it.id}">
+          <td>${escape(it.name)}</td>
+          <td>${escape(it.vendor)}</td>
+          <td>${escape(it.category)}</td>
+          <td><input class="qty" type="number" value="${it.quantity}" data-id="${it.id}"></td>
+          <td>₹${it.price}</td>
+          <td>₹${(it.quantity*it.price).toLocaleString()}</td>
+          <td>${it.date}</td>
+          <td><button data-remove="${it.id}" style="background:transparent;border:0;color:${'#ef4444'};cursor:pointer">Remove</button></td>
+        </tr>
+      `).join('');
+      countEl.textContent = items.length;
+      renderFilters();
+      renderLow();
+      drawVendorChart();
+      updateOverview();
+    }
+
+    // ---------- filters ----------
+    function renderFilters(){
+      const cur = vendorFilter.value;
+      vendorFilter.innerHTML = '<option>All Vendors</option>' + uniqueVendors().map(v=>`<option>${escape(v)}</option>`).join('');
+      if (Array.from(vendorFilter.options).some(o=>o.value===cur)) vendorFilter.value = cur;
+    }
+
+    // ---------- inline qty change & remove ----------
+    tbody.addEventListener('input', e=>{
+      if (e.target.matches('input[type=number]')){
+        const id = Number(e.target.dataset.id), val = Number(e.target.value)||0;
+        items = items.map(it=> it.id===id ? ({...it, quantity: val}) : it);
+        renderTable();
+      }
+    });
+    tbody.addEventListener('click', e=>{
+      if (e.target.dataset.remove){
+        const id = Number(e.target.dataset.remove);
+        if (confirm('Remove this item?')){ items = items.filter(it=>it.id!==id); renderTable(); }
+      }
+    });
+
+    // ---------- low stock render (downside) ----------
+    function renderLow(){
+      const low = items.filter(it => Number(it.quantity) <= LOW_THRESHOLD);
+      if (!low.length) { lowList.innerHTML = '<li style="color:var(--muted)">No low-stock items</li>'; return; }
+      lowList.innerHTML = low.map(it=>`<li><strong>${escape(it.name)}</strong> — ${escape(it.vendor)} • Qty: ${it.quantity}</li>`).join('');
+    }
+
+    // ---------- vendor report (simple canvas bar chart, downside) ----------
+    function computeVendorReport(){
+      const map = {};
+      items.forEach(it=>{ const v = it.vendor||'Unknown'; map[v] = (map[v]||0) + (Number(it.quantity)||0)*(Number(it.price)||0); });
+      return Object.entries(map).map(([vendor,total])=>({vendor,total})).sort((a,b)=>b.total-a.total);
+    }
+    function drawVendorChart(){
+      const ctx = vendorChart.getContext('2d');
+      const data = computeVendorReport();
+      const DPR = window.devicePixelRatio||1;
+      const w = vendorChart.clientWidth, h = vendorChart.clientHeight;
+      vendorChart.width = Math.floor(w*DPR); vendorChart.height = Math.floor(h*DPR);
+      ctx.setTransform(1,0,0,1,0,0); ctx.scale(DPR,DPR);
+      ctx.clearRect(0,0,w,h);
+      if (!data.length){ ctx.fillStyle='#9ca3af'; ctx.font='13px sans-serif'; ctx.fillText('No data',10,20); return; }
+      const pad = 18, gap = 8;
+      const max = Math.max(...data.map(d=>d.total));
+      const barW = Math.max(18, (w - pad*2 - (data.length-1)*gap)/data.length);
+      data.forEach((d,i)=>{
+        const x = pad + i*(barW+gap);
+        const barH = (d.total / (max||1)) * (h - pad*2);
+        const y = h - pad - barH;
+        ctx.fillStyle = '#0f766e'; ctx.fillRect(x, y, barW, barH);
+        ctx.fillStyle = '#07303a'; ctx.font='11px sans-serif'; ctx.textAlign='center';
+        ctx.fillText(d.vendor.length>10 ? d.vendor.slice(0,10)+'...' : d.vendor, x+barW/2, h-pad+12);
+      });
+    }
+
+    // ---------- download vendor report ----------
+    document.getElementById('dlReport').addEventListener('click', ()=>{
+      const data = computeVendorReport();
+      const lines = ['vendor,totalValue', ...data.map(d=>`"${d.vendor.replace(/"/g,'""')}",${d.total}`)];
+      const blob = new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `vendor_report_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+    });
+    document.getElementById('copyReport').addEventListener('click', ()=>{
+      const data = computeVendorReport();
+      const summary = data.map(d=>`${d.vendor}: ₹${Math.round(d.total).toLocaleString()}`).join('\n');
+      navigator.clipboard?.writeText(summary).then(()=>alert('Vendor summary copied'));
+    });
+
+    // ---------- CSV import ----------
+    document.getElementById('csv').addEventListener('change', e=>{
+      const file = e.target.files[0]; if (!file) return;
+      const r = new FileReader(); r.onload = ev=>{
+        const text = ev.target.result;
+        // simple split by lines, support quoted basic
+        const rows = text.split(/\r?\n/).filter(Boolean).map(l => l.split(',').map(c=>c.replace(/^"|"$/g,'')));
+        if (rows.length < 2) { alert('No rows found'); return; }
+        const headers = rows[0].map(h=>h.trim().toLowerCase());
+        const newItems = rows.slice(1).map(rw=>{
+          const obj = {}; headers.forEach((h,i)=>obj[h]=rw[i]??'');
+          return { id: Number(obj.id) || Date.now()+Math.floor(Math.random()*1000), name: obj.name||'', vendor: obj.vendor||'Unknown', category: obj.category||'', quantity: Number(obj.quantity)||0, price: Number(obj.price)||0, date: obj.date||new Date().toISOString().slice(0,10) };
+        });
+        items = items.concat(newItems); e.target.value=''; renderTable();
+      }; r.readAsText(file);
+    });
+
+    // ---------- UI controls ----------
+    document.getElementById('addBtn').addEventListener('click', ()=>{ items.unshift({ id:Date.now(), name:'New Item', vendor:uniqueVendors()[0]||'New Vendor', category:'Misc', quantity:0, price:0, date:new Date().toISOString().slice(0,10) }); renderTable(); });
+    document.getElementById('exportAll').addEventListener('click', ()=>exportCSV(false));
+    document.getElementById('exportFiltered').addEventListener('click', ()=>exportCSV(true));
+    document.getElementById('clear').addEventListener('click', ()=>{ q.value=''; vendorFilter.value='All Vendors'; renderTable(); });
+    vendorFilter.addEventListener('change', renderTable);
+    q.addEventListener('input', renderTable);
+
+    // ---------- export CSV helper ----------
+    function exportCSV(useFiltered=false){
+      const list = useFiltered ? filtered() : items;
+      const headers = ['id','name','vendor','quantity','price','category','date'];
+      const lines = [headers.join(',')];
+      list.forEach(r=>{
+        const row = headers.map(h=>`"${String(r[h] ?? '').replace(/"/g,'""')}"`).join(',');
+        lines.push(row);
+      });
+      const blob = new Blob([lines.join('\n')],{type:'text/csv;charset=utf-8;'});
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = `inventory_${useFiltered?'filtered':'all'}_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href);
+    }
+
+    // ---------- overview update ----------
+    function updateOverview(){
+      ovSkus.textContent = items.length;
+      ovVendors.textContent = uniqueVendors().length;
+      ovLatest.textContent = items[0]?.name || '—';
+      const total = items.reduce((s,i)=> s + (Number(i.quantity)||0)*(Number(i.price)||0), 0);
+      ovValue.textContent = '₹' + total.toLocaleString();
+    }
+
+    // ---------- init ----------
+    renderTable();
+    window.addEventListener('resize', drawVendorChart);
+ document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

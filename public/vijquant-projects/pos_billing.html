@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>vijaxy POS — Professional</title>
+  <meta name="description" content="vijaxy POS — Reliable retail point-of-sale with invoice export, print & sync."/>
+  <style>
+    :root{
+      --bg:#f6f8fb;
+      --card:#ffffff;
+      --muted:#6b7280;
+      --text:#0f172a;
+      --accent:#2563eb;
+      --accent-2:#7c3aed;
+      --success:#10b981;
+      --danger:#ef4444;
+      --border:#e6eef8;
+      --glass:rgba(15,23,42,0.03);
+      --shadow:0 10px 30px rgba(15,23,42,0.06);
+      --radius:12px;
+      --max-width:1200px;
+      --gap:18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Helvetica Neue", monospace;
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      padding:0;
+      font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      line-height:1.45;
+      background:linear-gradient(180deg,var(--bg),#f3f6fb);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding-bottom:60px;
+    }
+
+    /* Top navigation */
+    .top-nav{
+      position:sticky;
+      top:0;
+      z-index:999;
+      background:linear-gradient(180deg,var(--card),#fbfdff);
+      border-bottom:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px 20px;
+      box-shadow:0 6px 26px rgba(16,24,40,0.03);
+      gap:12px;
+    }
+    .nav-left{display:flex;align-items:center;gap:12px}
+    .nav-logo{width:56px;height:56px;border-radius:12px;background:transparent;display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:18px;overflow:hidden}
+    .nav-logo img{width:44px;height:44px;object-fit:cover;border-radius:8px}
+    .nav-title{display:flex;flex-direction:column}
+    .nav-title strong{font-size:16px}
+    .nav-title small{color:var(--muted);font-size:12px}
+    .nav-menu{display:flex;gap:16px;align-items:center}
+    .nav-menu a{color:var(--text);font-weight:600;padding:8px 10px;border-radius:8px;text-decoration:none}
+    .nav-menu a:hover{background:var(--glass)}
+    .nav-right{display:flex;align-items:center;gap:12px}
+
+    .search-input{padding:10px 12px;border-radius:10px;border:1px solid var(--border);min-width:320px;background:white;box-shadow:0 2px 8px rgba(16,24,40,0.03)}
+    .icon-btn{border:1px solid var(--border);background:transparent;padding:8px;border-radius:8px;cursor:pointer}
+
+    /* Layout */
+    .wrap{max-width:var(--max-width);margin:22px auto;padding:18px;display:flex;flex-direction:column;gap:var(--gap)}
+    .columns{display:grid;grid-template-columns:1fr 360px;gap:var(--gap);align-items:start}
+    .card{background:var(--card);border-radius:var(--radius);padding:16px;border:1px solid var(--border);box-shadow:var(--shadow)}
+    .card h2{margin:0 0 6px 0}
+    .u-muted{color:var(--muted)}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:white;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px dashed var(--border)}
+    .btn.small{padding:6px 8px;font-size:13px}
+    .badge-small{background:transparent;border:1px solid var(--border);padding:6px 8px;border-radius:8px;font-weight:700}
+
+    /* Products */
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+    .product-card{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;border:1px solid var(--border);background:linear-gradient(180deg,#ffffff,#fbfdff)}
+    .product-thumb{width:80px;height:80px;border-radius:10px;background:#eef2ff;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;flex-shrink:0;overflow:hidden}
+    .product-thumb img{width:100%;height:100%;object-fit:cover}
+    .product-info{flex:1;min-width:0}
+    .product-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .product-meta{color:var(--muted);font-size:13px;overflow:hidden;text-overflow:ellipsis}
+    .product-price{font-weight:800;margin-top:8px}
+
+    /* Quick cart */
+    .quick-cart{display:flex;flex-direction:column;gap:12px}
+    .cart-item{display:flex;justify-content:space-between;align-items:center;padding:8px;border-radius:8px;border:1px solid var(--border);background:#fbfdff}
+    .cart-summary{display:flex;flex-direction:column;gap:8px}
+    .summary-row{display:flex;justify-content:space-between;align-items:center}
+    .invoice-table{width:100%;border-collapse:collapse;margin-top:12px}
+    .invoice-table th,.invoice-table td{padding:12px;border-bottom:1px solid var(--border);text-align:left}
+
+    /* Invoices table */
+    table.table{width:100%;border-collapse:collapse}
+    table.table thead th{background:transparent;text-align:left;padding:10px 8px;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border)}
+    table.table td{padding:10px 8px;border-bottom:1px solid var(--border)}
+
+    /* Footer */
+    .site-footer{
+      margin-top:30px;padding:20px;border-top:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;gap:12px;background:linear-gradient(180deg,#ffffff,#fbfdff);
+      position:relative;z-index:10;border-radius:12px;
+    }
+    .footer-links{display:flex;gap:16px;flex-wrap:wrap}
+    .footer-links a{color:var(--muted);text-decoration:none;font-weight:600}
+    .footer-legal{font-size:13px;color:var(--muted)}
+
+    /* Empty state */
+    .empty{padding:40px;text-align:center;color:var(--muted)}
+    .view-toggle{display:flex;gap:8px;align-items:center}
+    .small-muted{font-size:13px;color:var(--muted)}
+
+    /* Responsive */
+    @media (max-width:1100px){
+      .columns{grid-template-columns:1fr 320px}
+      .search-input{min-width:220px}
+    }
+    @media (max-width:880px){
+      .columns{grid-template-columns:1fr}
+      .nav-menu{display:none}
+      .search-input{display:none}
+      .products-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr))}
+    }
+
+    /* utility */
+    .text-right{text-align:right}
+    .muted{color:var(--muted)}
+    .mono{font-family:var(--mono)}
+    .pill{padding:6px 8px;border-radius:999px;border:1px solid var(--border);background:transparent;font-weight:700}
+  </style>
+</head>
+<body>
+  <!-- TOP NAV -->
+  <header class="top-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-left">
+      <a href="../projects.html" class="nav-logo" aria-label="Back to Projects">
+        <img src="../images/pos-billing.jpeg" alt="pos-billing logo" onerror="this.style.display='none'"/>
+      </a>
+      <div class="nav-title">
+        <strong>vijaxy POS</strong>
+        <small class="u-muted">Reliable retail point-of-sale</small>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:12px">
+      <input id="globalSearch" class="search-input" placeholder="Search products, barcode or invoice..." aria-label="Search products or invoices" />
+      <nav class="nav-menu" id="topMenu" aria-label="Top menu">
+        <a href="#">Home</a>
+        <a href="#products">Products</a>
+        <a href="#invoices">Invoices</a>
+        <a href="#reports">Reports</a>
+        <a href="#settings">Settings</a>
+        <a href="#help">Help</a>
+      </nav>
+
+      <div class="nav-right">
+        <button class="icon-btn" id="btnNotifications" aria-label="Notifications">🔔</button>
+        <div style="display:flex;align-items:center;gap:8px">
+          <img src="../images/pos-billing.jpeg" alt="pos-billing avatar" style="width:40px;height:40px;border-radius:8px;object-fit:cover" onerror="this.style.display='none'"/>
+          <div style="text-align:left">
+            <div style="font-weight:700">vijaxy</div>
+            <small class="u-muted">Admin</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAP -->
+  <main class="wrap" role="main">
+    <div class="columns" aria-live="polite">
+      <!-- LEFT: PRODUCTS + INVOICES -->
+      <section>
+        <section class="card" id="products">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <div>
+              <h2>Products</h2>
+              <p class="u-muted">Manage product catalog. Click Add to add an item to the cart.</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <div class="view-toggle">
+                <button class="btn badge-small" id="btnGrid">Grid</button>
+                <button class="btn ghost badge-small" id="btnList">List</button>
+              </div>
+              <button class="btn" id="btnAddProduct">+ Add Product</button>
+              <button class="btn ghost" id="btnImport">Import</button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+            <input id="filterInput" class="input" placeholder="Filter by name or barcode" aria-label="Filter products" />
+            <select id="categoryFilter" class="select" aria-label="Filter category">
+              <option value="">All categories</option>
+              <option value="chairs">Chairs</option>
+              <option value="tables">Tables</option>
+              <option value="decor">Decor</option>
+              <option value="beds">Beds</option>
+              <option value="storage">Storage</option>
+            </select>
+            <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+              <div class="small-muted">Showing <span id="productsCount">0</span> products</div>
+            </div>
+          </div>
+
+          <div id="productsList" style="margin-top:16px" class="products-grid" role="list"></div>
+        </section>
+
+        <section id="invoicesSection" class="card invoice" style="margin-top:18px">
+          <div class="invoice-header" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <h3>Recent Invoices</h3>
+              <p class="u-muted">Saved invoices stored locally and exportable.</p>
+            </div>
+            <div class="invoice-actions" style="display:flex;gap:8px">
+              <button class="btn" id="exportCsv">Export CSV</button>
+              <button class="btn" id="exportJson">Export JSON</button>
+              <button class="btn" id="syncBtn">Sync</button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;overflow:auto">
+            <table class="table" id="invoicesTable" aria-label="Saved invoices">
+              <thead>
+                <tr>
+                  <th>Invoice</th>
+                  <th>Date</th>
+                  <th>Customer</th>
+                  <th>Total</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="invoicesBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <!-- RIGHT: QUICK CART -->
+      <aside class="card" aria-labelledby="quickCartTitle" style="height:auto;">
+        <div class="quick-cart">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <h3 id="quickCartTitle">Quick Cart</h3>
+            <div class="u-muted">Saved: <span id="savedCount">0</span></div>
+          </div>
+
+          <div id="cartPreview" style="display:flex;flex-direction:column;gap:8px" aria-live="polite"></div>
+
+          <div class="cart-summary">
+            <div class="summary-row"><div class="u-muted">Subtotal</div><div id="subTotal">₹0.00</div></div>
+            <div class="summary-row"><div class="u-muted">Tax (12%)</div><div id="taxAmt">₹0.00</div></div>
+            <div class="summary-row"><div class="u-muted">Discount</div><div><input id="discount" class="input" value="0" style="width:90px;padding:8px;border-radius:8px;border:1px solid var(--border)"/>%</div></div>
+            <div class="summary-row" style="font-weight:800;font-size:18px"><div>Total</div><div id="grandTotal">₹0.00</div></div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn" id="saveInvoice">Save Invoice</button>
+            <button class="btn" id="clearCart">Clear</button>
+          </div>
+
+          <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn" id="printInvoice">Print</button>
+            <button class="btn" id="downloadReceipt">Download Receipt</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- FULL INVOICE PREVIEW -->
+    <section id="fullInvoice" class="card" style="margin-top:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;gap:12px;align-items:center">
+          <a href="../projects.html" class="nav-logo" style="width:64px;height:64px;border-radius:12px" aria-label="Back to Projects">
+            <img src="../images/pos-billing.jpeg" alt="pos-billing logo" style="width:44px;height:44px;border-radius:8px;object-fit:cover" onerror="this.style.display='none'"/>
+          </a>
+          <div>
+            <h2 style="margin:0">Invoice <span id="invoiceNo">#0001</span></h2>
+            <div class="u-muted">Date: <span id="invDate"></span></div>
+          </div>
+        </div>
+
+        <div style="text-align:right">
+          <div style="font-weight:800">vijaxy Furnitures</div>
+          <div class="u-muted">Contact: +91 98765 43210 • hello@vijaxy.example</div>
+        </div>
+      </div>
+
+      <table class="invoice-table" style="margin-top:12px" aria-label="Invoice items">
+        <thead>
+          <tr><th>Item</th><th>Qty</th><th>Price</th><th>Amount</th></tr>
+        </thead>
+        <tbody id="cartBody"></tbody>
+      </table>
+
+      <div style="display:flex;justify-content:flex-end;margin-top:12px">
+        <div style="width:320px">
+          <div class="summary-row"><div class="u-muted">Subtotal</div><div id="subTotal2">₹0.00</div></div>
+          <div class="summary-row"><div class="u-muted">Tax (12%)</div><div id="taxAmt2">₹0.00</div></div>
+          <div class="summary-row"><div class="u-muted">Discount</div><div id="discountAmt2">₹0.00</div></div>
+          <div class="summary-row" style="font-weight:800;font-size:18px"><div>Total</div><div id="grandTotal2">₹0.00</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROFESSIONAL FOOTER -->
+    <footer class="site-footer" role="contentinfo" aria-label="Footer">
+      <div style="display:flex;gap:12px;align-items:center">
+        <a href="../projects.html" class="nav-logo" style="width:56px;height:56px;border-radius:10px" aria-label="Back to Projects">
+          <img src="../images/pos-billing.jpeg" alt="pos-billing logo" style="width:44px;height:44px;border-radius:8px;object-fit:cover" onerror="this.style.display='none'"/>
+        </a>
+        <div>
+          <div style="font-weight:800">vijaxy Furnitures</div>
+          <div class="u-muted">Reliable retail POS — Invoice export & sync</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <div class="footer-links" role="navigation" aria-label="Footer links">
+          <a href="#">Home</a>
+          <a href="#products">Products</a>
+          <a href="#invoices">Invoices</a>
+          <a href="#reports">Reports</a>
+          <a href="#settings">Settings</a>
+          <a href="#help">Help</a>
+        </div>
+        <div class="footer-legal">© <span id="year"></span> vijaxy — All rights reserved.</div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- JAVASCRIPT: complete & validated -->
+  <script>
+  (function () {
+    'use strict';
+
+    // Keys
+    const PRODUCTS_KEY = 'vijaxy_products_v1';
+    const INVOICES_KEY = 'vijaxy_invoices_v1';
+
+    // Seed products (images optional — use real paths if available)
+    const seedProducts = [
+      {id:'p001',name:'Ergo Office Chair',price:2499,barcode:'1001001',category:'chairs',img:'',stock:12},
+      {id:'p002',name:'Classic Dining Table',price:7999,barcode:'1001002',category:'tables',img:'',stock:4},
+      {id:'p003',name:'LED Reading Lamp',price:799,barcode:'1001003',category:'decor',img:'',stock:20},
+      {id:'p004',name:'Cushion Set (4)',price:299,barcode:'1001004',category:'decor',img:'',stock:40},
+      {id:'p005',name:'Six-Shelf Bookshelf',price:4999,barcode:'1001005',category:'storage',img:'',stock:6},
+      {id:'p006',name:'Corner Sofa Small',price:15999,barcode:'1001006',category:'sofa',img:'',stock:2},
+      {id:'p007',name:'Wall Mirror Decorative',price:1299,barcode:'1001007',category:'decor',img:'',stock:8},
+      {id:'p008',name:'Console Table',price:3499,barcode:'1001008',category:'tables',img:'',stock:7},
+      {id:'p009',name:'Study Desk',price:3999,barcode:'1001009',category:'tables',img:'',stock:15},
+      {id:'p010',name:'Padded Stool',price:699,barcode:'1001010',category:'chairs',img:'',stock:30}
+    ];
+
+    // helpers
+    const $ = id => document.getElementById(id);
+    const formatMoney = n => '₹' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const nextInvoiceNo = (invoices) => '#' + String(1000 + (invoices.length + 1)).padStart(4, '0');
+
+    // load from localStorage safely
+    function loadJSON(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        return JSON.parse(raw);
+      } catch (e) {
+        console.error('loadJSON error', e);
+        return fallback;
+      }
+    }
+    function saveJSON(key, value) {
+      try { localStorage.setItem(key, JSON.stringify(value)); } catch (e) { console.error('saveJSON error', e); }
+    }
+
+    let products = loadJSON(PRODUCTS_KEY, seedProducts.slice());
+    let invoices = loadJSON(INVOICES_KEY, []);
+    let cart = [];
+
+    // DOM refs (null-safe)
+    const productsListEl = $('productsList');
+    const productsCountEl = $('productsCount');
+    const filterInput = $('filterInput');
+    const categoryFilter = $('categoryFilter');
+    const cartPreviewEl = $('cartPreview');
+    const subTotalEl = $('subTotal');
+    const taxAmtEl = $('taxAmt');
+    const grandTotalEl = $('grandTotal');
+    const savedCountEl = $('savedCount');
+    const invoiceNoEl = $('invoiceNo');
+    const invDateEl = $('invDate');
+    const cartBodyEl = $('cartBody');
+    const subTotal2El = $('subTotal2');
+    const taxAmt2El = $('taxAmt2');
+    const grandTotal2El = $('grandTotal2');
+    const discountInput = $('discount');
+    const invoicesBody = $('invoicesBody');
+    const globalSearch = $('globalSearch');
+
+    // SVG placeholder thumb
+    function svgThumb(initials) {
+      return `<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-hidden="true" width="64" height="64">
+        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#7c3aed"/></linearGradient></defs>
+        <rect width="64" height="64" rx="8" fill="url(#g)"/>
+        <text x="50%" y="52%" text-anchor="middle" alignment-baseline="middle" font-family="Inter, Arial" font-size="26" fill="rgba(255,255,255,0.95)">${initials}</text>
+      </svg>`;
+    }
+
+    // render products
+    function renderProducts(filter = '', category = '') {
+      if (!productsListEl) return;
+      const q = (filter || '').trim().toLowerCase();
+      productsListEl.innerHTML = '';
+      const list = products.filter(p => (
+        p.name.toLowerCase().includes(q) ||
+        (p.barcode||'').includes(q) ||
+        (p.id||'').toLowerCase().includes(q)
+      ) && (category ? p.category === category : true));
+      if (productsCountEl) productsCountEl.textContent = list.length;
+      if (list.length === 0) {
+        productsListEl.innerHTML = `<div class="empty card" style="grid-column:1/-1">No products found</div>`;
+        return;
+      }
+      list.forEach(p => {
+        const el = document.createElement('div');
+        el.className = 'product-card';
+        const initials = (p.name||'').split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
+        const thumb = p.img ? `<img src="${p.img}" alt="${p.name}">` : svgThumb(initials);
+        el.innerHTML = `
+          <div class="product-thumb" role="img" aria-label="${p.name} thumbnail">${thumb}</div>
+          <div class="product-info">
+            <div class="product-name" title="${p.name}">${p.name}</div>
+            <div class="product-meta">${p.id} • ${p.barcode} • Stock: ${p.stock}</div>
+            <div class="product-price">${formatMoney(p.price)}</div>
+          </div>
+          <div class="product-actions" style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn" data-add="${p.id}" aria-label="Add ${p.name} to cart">Add</button>
+            <button class="btn ghost" data-edit="${p.id}" aria-label="Edit ${p.name}">Edit</button>
+          </div>
+        `;
+        productsListEl.appendChild(el);
+      });
+    }
+
+    // cart functions
+    function addToCart(productId, qty = 1) {
+      const p = products.find(x => x.id === productId);
+      if (!p) { alert('Product not found'); return; }
+      const existing = cart.find(c => c.id === p.id);
+      if (existing) existing.qty += qty;
+      else cart.push({ id: p.id, name: p.name, price: p.price, qty: qty, barcode: p.barcode });
+      renderCart();
+    }
+
+    function renderCart() {
+      if (!cartPreviewEl || !cartBodyEl) return;
+      cartPreviewEl.innerHTML = '';
+      cartBodyEl.innerHTML = '';
+      let subtotal = 0;
+      cart.forEach((c, idx) => {
+        const amount = c.price * c.qty;
+        subtotal += amount;
+        const pv = document.createElement('div');
+        pv.className = 'cart-item';
+        pv.innerHTML = `<div style="min-width:0">${c.name} <div class="u-muted" style="font-size:12px">x${c.qty}</div></div><div style="font-weight:800">${formatMoney(amount)}</div>`;
+        cartPreviewEl.appendChild(pv);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${c.name}</td>
+          <td><input type="number" data-idx="${idx}" min="1" value="${c.qty}" style="width:80px;padding:6px;border-radius:6px;border:1px solid var(--border)" /></td>
+          <td>${formatMoney(c.price)}</td>
+          <td>${formatMoney(amount)}</td>
+        `;
+        cartBodyEl.appendChild(tr);
+      });
+
+      const tax = subtotal * 0.12;
+      const discPercent = Number((discountInput && discountInput.value) || 0) || 0;
+      const discountAmt = subtotal * (discPercent / 100);
+      const grand = subtotal + tax - discountAmt;
+
+      if (subTotalEl) subTotalEl.textContent = formatMoney(subtotal);
+      if (taxAmtEl) taxAmtEl.textContent = formatMoney(tax);
+      if (grandTotalEl) grandTotalEl.textContent = formatMoney(grand);
+      if (subTotal2El) subTotal2El.textContent = formatMoney(subtotal);
+      if (taxAmt2El) taxAmt2El.textContent = formatMoney(tax);
+      if (grandTotal2El) grandTotal2El.textContent = formatMoney(grand);
+      if (invoiceNoEl) invoiceNoEl.textContent = nextInvoiceNo(invoices);
+      if (invDateEl) invDateEl.textContent = new Date().toLocaleString();
+      if (savedCountEl) savedCountEl.textContent = invoices.length;
+
+      // bind qty change
+      cartBodyEl.querySelectorAll('input[type=number]').forEach(inp => {
+        inp.addEventListener('change', e => {
+          const i = Number(e.target.dataset.idx);
+          const v = Math.max(1, Number(e.target.value) || 1);
+          cart[i].qty = v;
+          renderCart();
+        });
+      });
+    }
+
+    // invoice functions
+    function saveInvoice() {
+      if (cart.length === 0) { alert('Cart is empty'); return; }
+      const subtotal = Number((subTotalEl && subTotalEl.textContent || '0').replace(/[₹,]/g, '')) || 0;
+      const tax = Number((taxAmtEl && taxAmtEl.textContent || '0').replace(/[₹,]/g, '')) || 0;
+      const total = Number((grandTotalEl && grandTotalEl.textContent || '0').replace(/[₹,]/g, '')) || 0;
+      const inv = {
+        no: nextInvoiceNo(invoices),
+        date: new Date().toISOString(),
+        customer: 'Walk-in',
+        items: cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.qty, amount: c.price * c.qty })),
+        subtotal, tax, discountPercent: Number((discountInput && discountInput.value) || 0) || 0, total, synced: false
+      };
+      invoices.push(inv);
+      saveJSON(INVOICES_KEY, invoices);
+      alert('Invoice saved: ' + inv.no);
+      cart = [];
+      renderCart();
+      renderInvoices();
+    }
+
+    function exportCSV() {
+      if (!invoices || invoices.length === 0) { alert('No invoices'); return; }
+      let csv = 'InvoiceNo,Date,Customer,ItemID,ItemName,Qty,Price,Amount,Subtotal,Tax,DiscountPercent,Total\n';
+      invoices.forEach(inv => {
+        inv.items.forEach(item => {
+          csv += `${inv.no},${inv.date},${inv.customer},${item.id},"${item.name}",${item.qty},${item.price},${item.amount},${inv.subtotal},${inv.tax},${inv.discountPercent},${inv.total}\n`;
+        });
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'invoices.csv'; a.click(); URL.revokeObjectURL(url);
+    }
+
+    function exportJSON() {
+      if (!invoices || invoices.length === 0) { alert('No invoices'); return; }
+      const blob = new Blob([JSON.stringify(invoices, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'invoices.json'; a.click(); URL.revokeObjectURL(url);
+    }
+
+    async function syncInvoices() {
+      const unsynced = invoices.filter(i => !i.synced);
+      if (unsynced.length === 0) { alert('Nothing to sync'); return; }
+      const endpoint = 'https://jsonplaceholder.typicode.com/posts'; // demo endpoint
+      try {
+        const resp = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ invoices: unsynced }) });
+        if (!resp.ok) throw new Error('Network error');
+        invoices = invoices.map(inv => ({ ...inv, synced: true }));
+        saveJSON(INVOICES_KEY, invoices);
+        alert('Synced ' + unsynced.length + ' invoices');
+        renderInvoices();
+      } catch (err) {
+        console.error(err);
+        // fallback: create payload
+        const blob = new Blob([JSON.stringify({ invoices: unsynced }, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'sync_payload.json'; a.click(); URL.revokeObjectURL(url);
+        alert('Could not reach server — created sync_payload.json');
+      }
+    }
+
+    // print invoice (safe, correct template string usage)
+    function printInvoice() {
+      if (cart.length === 0) { alert('Cart empty'); return; }
+      const html = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Invoice</title>
+  <style>
+    body{font-family:Arial, Helvetica, sans-serif;padding:20px;color:#111}
+    h2{margin:0 0 8px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    td,th{padding:8px;border:1px solid #ddd;text-align:left}
+    .right{text-align:right}
+    .summary{margin-top:14px;max-width:360px}
+  </style>
+</head>
+<body>
+  <h2>vijaxy — Invoice</h2>
+  <div>Invoice: ${nextInvoiceNo(invoices)}</div>
+  <div>Date: ${new Date().toLocaleString()}</div>
+  <table>
+    <thead><tr><th>Item</th><th>Qty</th><th>Price</th><th>Amount</th></tr></thead>
+    <tbody>
+      ${cart.map(c => `<tr><td>${c.name}</td><td>${c.qty}</td><td>${formatMoney(c.price)}</td><td>${formatMoney(c.price * c.qty)}</td></tr>`).join('')}
+    </tbody>
+  </table>
+  <div class="summary">
+    <div>Subtotal: ${formatMoney(Number((subTotalEl && subTotalEl.textContent || '0').replace(/[₹,]/g,'')))}</div>
+    <div>Tax: ${formatMoney(Number((taxAmtEl && taxAmtEl.textContent || '0').replace(/[₹,]/g,'')))}</div>
+    <div>Total: ${formatMoney(Number((grandTotalEl && grandTotalEl.textContent || '0').replace(/[₹,]/g,'')))}</div>
+  </div>
+</body>
+</html>`;
+
+      const win = window.open('', '_blank', 'width=900,height=700');
+      if (!win) { alert('Unable to open print window (blocked).'); return; }
+      win.document.write(html);
+      win.document.close();
+      // give browser time to render
+      setTimeout(() => win.print(), 350);
+    }
+
+    // render invoices table with proper cells & view button
+    function renderInvoices() {
+      if (!invoicesBody) return;
+      invoicesBody.innerHTML = '';
+      invoices.forEach((inv, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${inv.no}</td>
+          <td>${new Date(inv.date).toLocaleString()}</td>
+          <td>${inv.customer || '—'}</td>
+          <td>${formatMoney(inv.total || 0)}</td>
+          <td><button class="btn small" data-view="${idx}">View</button></td>
+        `;
+        invoicesBody.appendChild(tr);
+      });
+      if (savedCountEl) savedCountEl.textContent = invoices.length;
+    }
+
+    // quick add product (demo)
+    function quickAddProduct() {
+      const name = prompt('Product name');
+      if (!name) return;
+      const price = Number(prompt('Price') || 0);
+      const barcode = prompt('Barcode') || ('b' + Date.now());
+      const id = 'p' + String(Math.floor(Math.random() * 90000 + 1000));
+      const p = { id, name, price, barcode, category: 'misc', img: '', stock: 10 };
+      products.push(p);
+      saveJSON(PRODUCTS_KEY, products);
+      renderProducts(filterInput ? filterInput.value : '', categoryFilter ? categoryFilter.value : '');
+    }
+
+    // download generated receipt (json) for last saved invoice
+    function downloadReceiptFile() {
+      if (!invoices.length) { alert('No invoices'); return; }
+      const last = invoices[invoices.length - 1];
+      const blob = new Blob([JSON.stringify(last, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `${last.no.replace('#','')}_receipt.json`; a.click(); URL.revokeObjectURL(url);
+    }
+
+    // Event delegation
+    document.addEventListener('click', e => {
+      const target = e.target;
+      if (!target) return;
+      if (target.matches('[data-add]')) addToCart(target.dataset.add);
+      else if (target.matches('#btnAddProduct')) quickAddProduct();
+      else if (target.matches('#saveInvoice')) saveInvoice();
+      else if (target.matches('#exportCsv')) exportCSV();
+      else if (target.matches('#exportJson')) exportJSON();
+      else if (target.matches('#syncBtn')) syncInvoices();
+      else if (target.matches('#printInvoice')) printInvoice();
+      else if (target.matches('#downloadReceipt')) downloadReceiptFile();
+      else if (target.matches('#clearCart')) { if (confirm('Clear cart?')) { cart = []; renderCart(); } }
+      else if (target.matches('[data-view]')) {
+        const i = Number(target.dataset.view);
+        const inv = invoices[i];
+        if (inv) alert(`Invoice ${inv.no}\nTotal: ${formatMoney(inv.total)}\nItems: ${inv.items.length}`);
+      } else if (target.matches('[data-edit]')) {
+        alert('Edit product feature not implemented in demo');
+      } else if (target.matches('#btnGrid')) {
+        localStorage.setItem('vj_view', 'grid');
+        target.classList.remove('ghost');
+        const listBtn = document.getElementById('btnList'); if (listBtn) listBtn.classList.add('ghost');
+      } else if (target.matches('#btnList')) {
+        localStorage.setItem('vj_view', 'list');
+        target.classList.remove('ghost');
+        const gridBtn = document.getElementById('btnGrid'); if (gridBtn) gridBtn.classList.add('ghost');
+      }
+    });
+
+    // Inputs & listeners
+    if (filterInput) filterInput.addEventListener('input', () => renderProducts(filterInput.value, categoryFilter ? categoryFilter.value : ''));
+    if (categoryFilter) categoryFilter.addEventListener('change', () => renderProducts(filterInput ? filterInput.value : '', categoryFilter.value));
+    if (discountInput) discountInput.addEventListener('input', renderCart);
+    if (globalSearch) globalSearch.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        const q = globalSearch.value.trim();
+        if (!q) return;
+        const inv = invoices.find(i => i.no.toLowerCase() === q.toLowerCase());
+        if (inv) { alert(`Found invoice ${inv.no} — total ${formatMoney(inv.total)}`); return; }
+        renderProducts(q, categoryFilter ? categoryFilter.value : '');
+      }
+    });
+
+    // init view toggle
+    function initViewToggle() {
+      const v = localStorage.getItem('vj_view') || 'grid';
+      const gridBtn = document.getElementById('btnGrid');
+      const listBtn = document.getElementById('btnList');
+      if (v === 'grid') { if (gridBtn) gridBtn.classList.remove('ghost'); if (listBtn) listBtn.classList.add('ghost'); }
+      else { if (listBtn) listBtn.classList.remove('ghost'); if (gridBtn) gridBtn.classList.add('ghost'); }
+    }
+
+    // initialization
+    function init() {
+      renderProducts();
+      renderCart();
+      renderInvoices();
+      if (invDateEl) invDateEl.textContent = new Date().toLocaleString();
+      initViewToggle();
+      document.getElementById('year').textContent = new Date().getFullYear();
+    }
+
+    try { init(); } catch (e) { console.error('Init failed:', e); }
+
+  })();
+  </script>
+</body>
+</html>
