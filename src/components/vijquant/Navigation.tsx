@@ -50,7 +50,7 @@ const Navigation: React.FC<NavigationProps> = ({ onNavigate }) => {
               onClick={() => handleNavClick('hero')}
             >
                 <div className="relative">
-                  <img src="./vijquant-logo.png" alt="Vijquant logo" className="w-28 h-10 object-contain" />
+                  <img src="/vijquant-images/vijquant-logo.png" alt="Vijquant logo" className="w-28 h-10 object-contain" />
                 </div>
               <div>
                 <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
