@@ -42,7 +42,7 @@ const TeamSection: React.FC = () => {
       name: 'Gaurav Savita',
       role: 'CMO | Head of Marketing',
       bio: 'Drives branding, marketing, and growth.',
-      avatar: '/vijquant-images/team/gaurav.jpg',
+      avatar: '/vijquant-images/team/gaurav-savita.png',
     },
     {
       id: 'tm4',
