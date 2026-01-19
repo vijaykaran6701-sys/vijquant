@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import GlassCard from './GlassCard';
 import { supabase } from '@/lib/supabase';
-import { Send, CheckCircle, User, Mail, MessageSquare, Briefcase } from 'lucide-react';
+import { Send, CheckCircle, User, Mail, MessageSquare, Briefcase, Phone } from 'lucide-react';
 
 interface FormData {
   name: string;
   email: string;
   company: string;
+  phone: string;
   message: string;
 }
 
@@ -15,6 +16,7 @@ const ContactForm: React.FC = () => {
     name: '',
     email: '',
     company: '',
+    phone: '',
     message: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,17 +34,40 @@ const ContactForm: React.FC = () => {
     setError(null);
     
     try {
-      const { error: submitError } = await supabase
+      // Minimal client-side validation
+      if (!formData.name.trim() || !formData.email.trim() || !formData.message.trim()) {
+        setError('Please fill in all required fields.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Consider adding CAPTCHA verification here (reCAPTCHA v2/v3) before insert in production
+
+      const { data: insertData, error: submitError } = await supabase
         .from('contact_submissions')
         .insert([{
-          name: formData.name,
-          email: formData.email,
-          company: formData.company || null,
-          message: formData.message,
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          company: formData.company.trim() || null,
+          phone: formData.phone.trim() || null,
+          message: formData.message.trim(),
           status: 'new'
         }]);
 
       if (submitError) {
+        // Handle common conditions
+        // Supabase client returns error with status when applicable
+        // Detect 401 (auth) vs RLS
+        // show safe message to user
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const se = submitError as any;
+        if (se.status === 401) {
+          setError('Authorization failed. Please contact site administrator.');
+        } else if (se.code === 'P1000' || (se.message && se.message.includes('row-level security'))) {
+          setError('Submission blocked by database policy. Please contact site administrator.');
+        } else {
+          setError('Failed to send message. Please try again later.');
+        }
         throw submitError;
       }
       
@@ -51,11 +76,11 @@ const ContactForm: React.FC = () => {
       // Reset after showing success
       setTimeout(() => {
         setIsSubmitted(false);
-        setFormData({ name: '', email: '', company: '', message: '' });
+        setFormData({ name: '', email: '', company: '', phone: '', message: '' });
       }, 3000);
     } catch (err) {
       console.error('Error submitting form:', err);
-      setError('Failed to send message. Please try again.');
+      if (!error) setError('Failed to send message. Please try again later.');
     }
     
     setIsSubmitting(false);
@@ -123,6 +148,21 @@ const ContactForm: React.FC = () => {
             className={inputClasses('email')}
           />
         </div>
+
+          {/* Phone Field */}
+          <div className="relative">
+            <Phone className={iconClasses('phone')} />
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Phone (Optional)"
+              value={formData.phone}
+              onChange={handleChange}
+              onFocus={() => setFocusedField('phone')}
+              onBlur={() => setFocusedField(null)}
+              className={inputClasses('phone')}
+            />
+          </div>
 
         {/* Company Field */}
         <div className="relative">

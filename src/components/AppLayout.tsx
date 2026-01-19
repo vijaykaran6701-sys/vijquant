@@ -14,6 +14,7 @@ import ClientLogos from './vijquant/ClientLogos';
 import Footer from './vijquant/Footer';
 import ProjectModal from './vijquant/ProjectModal';
 import ServiceModal from './vijquant/ServiceModal';
+import { services } from '@/lib/sampleData';
 
 
 
@@ -25,7 +26,7 @@ const AppLayout: React.FC = () => {
     image: string;
     tags: string[];
   } | null>(null);
-  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<any | null>(null);
   const [isProjectModalOpen, setIsProjectModalOpen] = useState(false);
   const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
 
@@ -90,9 +91,10 @@ const AppLayout: React.FC = () => {
     }
   };
 
-  const handleServiceClick = (serviceName: string) => {
-    setSelectedService(serviceName);
-    setIsServiceModalOpen(true);
+  const handleServiceClick = (serviceId: string) => {
+    const svc = services.find((s) => s.id === serviceId) || null;
+    setSelectedService(svc);
+    if (svc) setIsServiceModalOpen(true);
   };
 
   const handleContactFromModal = () => {

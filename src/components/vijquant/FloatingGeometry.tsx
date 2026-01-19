@@ -18,9 +18,18 @@ const FloatingGeometry: React.FC<FloatingGeometryProps> = ({ className }) => {
     if (!ctx) return;
 
     const resizeCanvas = () => {
-      canvas.width = canvas.offsetWidth * window.devicePixelRatio;
-      canvas.height = canvas.offsetHeight * window.devicePixelRatio;
-      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      // Reset any existing transform to avoid cumulative scaling
+      if (typeof ctx.resetTransform === 'function') {
+        ctx.resetTransform();
+      } else {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+      }
+
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      canvas.width = Math.floor(canvas.offsetWidth * dpr);
+      canvas.height = Math.floor(canvas.offsetHeight * dpr);
+      // scale drawing operations back to CSS pixels
+      ctx.scale(dpr, dpr);
     };
 
     resizeCanvas();
@@ -83,7 +92,8 @@ const FloatingGeometry: React.FC<FloatingGeometryProps> = ({ className }) => {
     const animate = () => {
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
-      
+
+      // Clear full canvas in CSS pixels
       ctx.clearRect(0, 0, width, height);
       
       // Update rotation based on mouse
@@ -105,13 +115,20 @@ const FloatingGeometry: React.FC<FloatingGeometryProps> = ({ className }) => {
         const p1 = projectedVertices[i];
         const p2 = projectedVertices[j];
         
-        const gradient = ctx.createLinearGradient(
-          centerX + p1.x, centerY + p1.y,
-          centerX + p2.x, centerY + p2.y
-        );
+        const gx0 = centerX + p1.x;
+        const gy0 = centerY + p1.y;
+        const gx1 = centerX + p2.x;
+        const gy1 = centerY + p2.y;
+
+        // Validate numeric values are finite to avoid canvas errors
+        if (!Number.isFinite(gx0) || !Number.isFinite(gy0) || !Number.isFinite(gx1) || !Number.isFinite(gy1)) {
+          return; // skip this edge
+        }
+
+        const gradient = ctx.createLinearGradient(gx0, gy0, gx1, gy1);
         
-        const alpha1 = Math.max(0.1, Math.min(0.8, (p1.z + 100) / 200));
-        const alpha2 = Math.max(0.1, Math.min(0.8, (p2.z + 100) / 200));
+        const alpha1 = Math.max(0.1, Math.min(0.8, (Number.isFinite(p1.z) ? (p1.z + 100) / 200 : 0.5)));
+        const alpha2 = Math.max(0.1, Math.min(0.8, (Number.isFinite(p2.z) ? (p2.z + 100) / 200 : 0.5)));
         
         gradient.addColorStop(0, `rgba(99, 102, 241, ${alpha1})`);
         gradient.addColorStop(0.5, `rgba(139, 92, 246, ${(alpha1 + alpha2) / 2})`);
@@ -127,25 +144,28 @@ const FloatingGeometry: React.FC<FloatingGeometryProps> = ({ className }) => {
       
       // Draw vertices as glowing points
       projectedVertices.forEach((p) => {
-        const alpha = Math.max(0.3, Math.min(1, (p.z + 100) / 200));
+        const px = centerX + p.x;
+        const py = centerY + p.y;
+
+        if (!Number.isFinite(px) || !Number.isFinite(py) || !Number.isFinite(p.scale)) return;
+
+        const alpha = Math.max(0.3, Math.min(1, (Number.isFinite(p.z) ? (p.z + 100) / 200 : 0.6)));
         const size = 2 + p.scale * 2;
-        
-        // Glow
-        const glow = ctx.createRadialGradient(
-          centerX + p.x, centerY + p.y, 0,
-          centerX + p.x, centerY + p.y, size * 3
-        );
-        glow.addColorStop(0, `rgba(99, 102, 241, ${alpha * 0.5})`);
-        glow.addColorStop(1, 'rgba(99, 102, 241, 0)');
-        
-        ctx.beginPath();
-        ctx.arc(centerX + p.x, centerY + p.y, size * 3, 0, Math.PI * 2);
-        ctx.fillStyle = glow;
-        ctx.fill();
-        
+
+        // Glow (validate size)
+        if (Number.isFinite(size) && size > 0) {
+          const glow = ctx.createRadialGradient(px, py, 0, px, py, size * 3);
+          glow.addColorStop(0, `rgba(99, 102, 241, ${alpha * 0.5})`);
+          glow.addColorStop(1, 'rgba(99, 102, 241, 0)');
+          ctx.beginPath();
+          ctx.arc(px, py, size * 3, 0, Math.PI * 2);
+          ctx.fillStyle = glow;
+          ctx.fill();
+        }
+
         // Point
         ctx.beginPath();
-        ctx.arc(centerX + p.x, centerY + p.y, size, 0, Math.PI * 2);
+        ctx.arc(px, py, size, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
         ctx.fill();
       });

@@ -8,44 +8,44 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // 1️⃣ Get existing session (page refresh case)
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setUser(data.session?.user ?? null);
+      setLoading(false);
+    });
+
+    // 2️⃣ Listen to login / logout changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-      }
-    );
-
     return () => subscription.unsubscribe();
   }, []);
 
+  // ✅ LOGIN (email + password from form)
   const signIn = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    return await supabase.auth.signInWithPassword({
       email,
       password,
     });
-    return { data, error };
   };
 
+  // ✅ SIGN UP (optional, admin panel me usually use nahi hota)
   const signUp = async (email: string, password: string) => {
-    const { data, error } = await supabase.auth.signUp({
+    return await supabase.auth.signUp({
       email,
       password,
     });
-    return { data, error };
   };
 
+  // ✅ LOGOUT
   const signOut = async () => {
-    const { error } = await supabase.auth.signOut();
-    return { error };
+    return await supabase.auth.signOut();
   };
 
   return {
